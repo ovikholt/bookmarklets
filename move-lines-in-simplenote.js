@@ -2,14 +2,14 @@
 // Also, can cut and copy lines by keeping cursor at a line and then CMD+X or CMD+C.
 
 // Not implemented for Windows (CTRL+X) yet.
-// Experimental code. No tests. Slightly buggy (cursor location) once in a while.
+// Experimental code. No tests.
 // Sometimes breaks the textarea undo (CTRL+Z) functionality.
 
 // You might want to consider using the Ace Editor bookmarklet instead.
 
-document.removeEventListener('keydown', f);
 
 (function(){
+  document.removeEventListener('keydown', f);
   var spl=function(s){
     if(s.length===0){return ['', ''];}
     var skipEndLine=s[s.length-1]==='\n';
@@ -68,15 +68,26 @@ document.removeEventListener('keydown', f);
     }
     var linesBelow=originalText.slice(k);
     var linesSelected=originalText.slice(n, k);
-    if(s===e&&(cut||copy)){
+    var noSelection = (s===e);
+    if(noSelection&&(cut||copy)){
+      var line=originalText.slice(n, k);
       t.selectionStart=n;
       t.selectionEnd=k;
-      document.execCommand('copy');
-      if(cut) {
+      if (copy) {
+        document.execCommand('copy');
+      } else {
         document.execCommand('cut');
+        var lengthOfLineBelow=linesBelow.indexOf('\n');
+        if (lengthOfLineBelow!==-1) {
+          var column = s-n;
+          var exceeds = column - lengthOfLineBelow;
+          console.log(lengthOfLineBelow, column, s, n, k, exceeds);
+          if (exceeds>0) {
+            s -= exceeds;
+          }
+        }
       }
-      t.selectionStart=s;
-      t.selectionEnd=e;
+      t.selectionStart=t.selectionEnd=s;
       event.preventDefault();
       return;
     }
