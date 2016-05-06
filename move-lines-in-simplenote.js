@@ -81,7 +81,6 @@
         if (lengthOfLineBelow!==-1) {
           var column = s-n;
           var exceeds = column - lengthOfLineBelow;
-          console.log(lengthOfLineBelow, column, s, n, k, exceeds);
           if (exceeds>0) {
             s -= exceeds;
           }
