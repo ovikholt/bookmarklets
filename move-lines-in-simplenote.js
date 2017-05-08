@@ -36,8 +36,8 @@
   var f=function(event){
     var up=event.altKey&&event.keyCode===38;
     var down=event.altKey&&event.keyCode===40;
-    var copy=event.metaKey&&event.keyCode===67;/*c*/
-    var cut=event.metaKey&&event.keyCode===88;/*x*/
+    var copy=(event.metaKey||event.ctrlKey)&&event.keyCode===67;/*c*/
+    var cut=(event.metaKey||event.ctrlKey)&&event.keyCode===88;/*x*/
     if(!up&&!down&&!cut&&!copy) {return;}
     var t=event.target;
     var s=t.selectionStart;
