@@ -33,7 +33,45 @@
     var lastLine=s.slice(i);
     return [firstPart, lastLine];
   };
+  var navigation=function(event) {
+    var pKey=Boolean(event.code === 'KeyP');
+    var nKey=Boolean(event.code === 'KeyN');
+    var selectPreviousDocument=event.altKey&&event.ctrlKey&&pKey;
+    var selectNextDocument=event.altKey&&event.ctrlKey&&nKey;
+    var goToSearch=event.altKey&&event.ctrlKey&&event.key==='/';
+    var goToText=event.altKey&&event.ctrlKey&&event.key==='Enter';
+    if (selectPreviousDocument) {
+      var prev = document.querySelector('.notes li.selected').previousElementSibling;
+      prev && prev.click();
+      event.preventDefault();
+      return true;
+    }
+    if (selectNextDocument) {
+      var next = document.querySelector('.notes li.selected').nextElementSibling;
+      next && next.click();
+      event.preventDefault();
+      return true;
+    }
+    if (goToSearch) {
+      document.querySelector('input.searchfield').select();
+      event.preventDefault();
+      return true;
+    }
+    if (goToText) {
+      var textarea = document.querySelector('.note textarea#txtarea');
+      textarea.select();
+      textarea.setSelectionRange(0,0);
+      event.preventDefault();
+      return true;
+    }
+    return false;
+  };
   var f=function(event){
+    var navigated = navigation(event);
+    if (navigated) {
+      return;
+    }
+
     var up=event.altKey&&event.keyCode===38;
     var down=event.altKey&&event.keyCode===40;
     var copy=(event.metaKey||event.ctrlKey)&&event.keyCode===67;/*c*/
